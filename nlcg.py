@@ -4,7 +4,7 @@ import numpy as np
 from optimisation_functions import OptFunc
 
 def nlcg_secant(parameters):
-    """Perform nonlinear conjugate gradient with Secant, polak-ribiere is implemmented for beta update
+    """Perform nonlinear conjugate gradient with Secant, polak-ribiere utilised exclusively (for now) for the beta update
 
     Keyword Arguments:
     parameters -- a dicitonary which is checked by init_params before used here.
@@ -51,8 +51,8 @@ def nlcg_secant(parameters):
             beta_lower = np.power(res_x,2.0) + np.power(res_y,2.0)
             beta = beta_upper / beta_lower
 
-            #Reset Search Direction if beta is very small
-            if np.isclose(beta, 0.0):
+            #Reset Search Direction if beta is negative for Polak-Ribiere
+            if np.less(beta, np.double(0.0)):
                 px_step = res_x
                 py_step = res_y
             else:
@@ -103,8 +103,8 @@ def nlcg_secant(parameters):
             beta_lower = np.power(res_x,2.0) + np.power(res_y,2.0)
             beta = beta_upper / beta_lower
 
-            #Reset Search Direction if beta is very small
-            if np.isclose(beta, 0.0):
+            #Reset Search Direction if beta is negative for Polak-Ribiere
+            if np.less(beta, np.double(0.0)):
                 px_step = res_x
                 py_step = res_y
             else:
@@ -206,6 +206,55 @@ def differentiate_y(x,y,myfunc):
     partial_y /= (60.0*H)
 
     return partial_y
+
+#Uses (O^(H^2*H^2)) accurate mixed derivative formula to approximate the mixed derivative,
+#this is symmetric, as in dxdy = dydx
+def differentiate_xy(x,y,myfunc):
+
+    H = np.double(0.01) #use same step size to treat both variables
+
+    #Need func for all combinatoric factors of +- h
+    func_plus_plus   = OptFunc(x+H, y+H)
+    func_plus_minus  = OptFunc(x+H, y-H)
+    func_minus_plus  = OptFunc(x-H, y+H)
+    func_minus_minus = OptFunc(x-H, y-H)
+
+    #Evaluate functions at these points
+    f_plus_plus   = func_plus_plus.solve_for(myfunc)
+    f_plus_minus  = func_plus_minus.solve_for(myfunc)
+    f_minus_plus  = func_minus_plus.solve_for(myfunc)
+    f_minus_minus = func_minus_minus.solve_for(myfunc)
+
+    partial_xy = np.double(0.0)
+
+    #Evaluate mixed derivative
+    partial_xy = f_plus_plus + f_plus_minus + f_minus_plus + f_minus_minus
+
+    partial_xy /= (4*H*H)
+
+    return partial_xy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 
