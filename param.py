@@ -1,18 +1,22 @@
-#This reads in all the variables from the user supplied file and initialises the computation
-#Read in a file which should contain all parameters required for calculation, this should include:
-#Function in question, Rosenbrock, Himmelblau ... (REQUIRED)
-#Initial starting points for x and y (REQUIRED)
-#Solver we wish to use, NLCG or BFGS (REQUIRED)
-#Choice of line search: secant or newton raphson (OPT)
-#Choice of beta update: fletcher reeves, polak ribiere or other (OPT)
-#Maximum number of iterations for the solver to complete before reaching a solution (OPT)
-#Convergence critera for resiudal 
-#If user does not specify certain things then we need to code a sensible default
-
 import numpy as np
 import sys
 
 def init_params(filename):
+    """
+    Given a supplied paramter file, this module intialises all variables associated with the upcoming computation.
+    It also does some sanity checks as to whether the intial starting points lie within the search domain with respect
+    to the function of interest.
+
+    Parameters:
+    solver      : nlcg or bfgs REQUIRED
+    function    : the function in question the user must specify in parameter file REQUIRED
+    x_initial   : starting point for x REQUIRED
+    y_initial   : starting point for y REQUIRED
+    beta_update : choice of either polak_ribiere or fletcher_reeves OPTIONAL (Default : polar_ribiere)
+    line_search : choice of either secant or newton_raphson OPTIONAL (Default : secant)
+    max_iter    : maximum number of iterations for the solver to find global minimum OPTIONAL (Default : 10000 )
+    tolerance   : tolerance factor to which x and y are determined OPTIONAL (Default : 1.0e-9)
+    """
 
     #Empty Dictionary
     myparams = {}
@@ -38,7 +42,6 @@ def init_params(filename):
 
 
 def check_params(parameters):
-
     #Check if user has specified a function and if it makes sense
     if 'function' in parameters:
         myfunc = parameters.get('function')
@@ -68,7 +71,6 @@ def check_params(parameters):
     else:
         sys.exit('y_initial not specified in parameter file')
 
-    
     #Now do a check on x_int and y_int to see if it is within the search space of the function in question
     if myfunc == 'rosenbrock':
         if(check_in_range(np.double(-100.0),np.double(100.0),myx_init,myy_init)):
@@ -138,7 +140,7 @@ def check_params(parameters):
     if 'tolerance' in parameters:
         parameters.update({'tolerance' : np.double(parameters.get('tolerance'))})
     else:
-        parameters.update({'tolerance' : np.double(1.0e-6)})
+        parameters.update({'tolerance' : np.double(1.0e-9)})
 
 
     return parameters

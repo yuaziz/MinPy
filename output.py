@@ -23,4 +23,5 @@ def write_output(success, x, y, history_array, num_iters):
         out.writelines(f'Converged Solution Found: {success!s}\n')
         out.writelines(f'Global Minimum x : {x:.6f}\n')
         out.writelines(f'Global Minimum y : {y:.6f}\n')
+        out.writelines(f'Completed in {num_iters} iterations\n')
         out.writelines('#-------------------------------------------#\n')

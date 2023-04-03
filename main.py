@@ -39,37 +39,23 @@ def main():
     #Read in parameters and intialise
     parameters = init_params(file_name)
 
-    #Call nlcg solver
-    success, x, y, history_array, num_iter = nlcg_secant(parameters)
+    #Call nlcg solver based on parameter input, only support certain combinations...
+    beta_update = parameters.get('beta_update')
+    line_search = parameters.get('line_search')
+
+    if(line_search=='secant' and beta_update=='polak_ribiere' ):
+        success, x, y, history_array, num_iter = nlcg_secant(parameters)
+    elif(line_search=='newton_raphson' and beta_update=='fletcher_reeves'):
+        #will call nlcg_newton_raphson solver soon
+        pass
+    else:
+        sys.exit('Apologies, this combination of line search and beta_update is not supported yet')
 
     #Write output
     write_output(success, x, y, history_array, num_iter)
 
-    #
-
-    # print(parameters)
-    # print(success)
-    # print(x)
-    # print(y)
-    # print(history_array)
-    # print(num_iter)
-
-    # x = nlcg(parameters)
-
-    # print(x)
-
-    # print(type(x))
-
-    # print(parameters)
-    # print(type(parameters.get('tolerance')))
-
-    #Read in data
-
-    #Call to solver
-
-    #Output data in suitable format
-
     #Plot if required
+
 
 if __name__ == '__main__':
     main()
