@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Ignore Parameter Files and output file with .dat
+*.am
+*.dat
