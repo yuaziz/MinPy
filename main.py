@@ -24,7 +24,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 from param import init_params
-from nlcg import nlcg_secant
+from nlcg import nlcg_secant, nlcg_newton_raphson
 from output import write_output
 
 def main():
@@ -46,8 +46,7 @@ def main():
     if(line_search=='secant' and beta_update=='polak_ribiere' ):
         success, x, y, history_array, num_iter = nlcg_secant(parameters)
     elif(line_search=='newton_raphson' and beta_update=='fletcher_reeves'):
-        #will call nlcg_newton_raphson solver soon
-        pass
+        success, x, y, history_array, num_iter = nlcg_newton_raphson(parameters)
     else:
         sys.exit('Apologies, this combination of line search and beta_update is not supported yet')
 

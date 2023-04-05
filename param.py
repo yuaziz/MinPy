@@ -3,11 +3,12 @@ import sys
 
 def init_params(filename):
     """
-    Given a supplied paramter file, this module intialises all variables associated with the upcoming computation.
+    Given a supplied parameter file, this module intialises all variables associated with the upcoming computation.
     It also does some sanity checks as to whether the intial starting points lie within the search domain with respect
     to the function of interest.
 
     Parameters:
+    ------------
     solver      : nlcg or bfgs REQUIRED
     function    : the function in question the user must specify in parameter file REQUIRED
     x_initial   : starting point for x REQUIRED
