@@ -25,6 +25,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 from param import init_params
 from nlcg import nlcg_secant, nlcg_newton_raphson
+#from bfgs import bfgs_solver
 from output import write_output
 
 def main():
@@ -42,11 +43,14 @@ def main():
     #Call nlcg solver based on parameter input, only support certain combinations...
     beta_update = parameters.get('beta_update')
     line_search = parameters.get('line_search')
+    solver      = parameters.get('solver')
 
-    if(line_search=='secant' and beta_update=='polak_ribiere' ):
+    if(solver=='nlcg' and line_search=='secant' and beta_update=='polak_ribiere' ):
         success, x, y, history_array, num_iter = nlcg_secant(parameters)
-    elif(line_search=='newton_raphson' and beta_update=='fletcher_reeves'):
+    elif(solver=='nlcg' and line_search=='newton_raphson' and beta_update=='fletcher_reeves'):
         success, x, y, history_array, num_iter = nlcg_newton_raphson(parameters)
+    elif(solver=='bfgs'):
+        success, x, y, history_array, num_iter = bfgs_solver(parameters)
     else:
         sys.exit('Apologies, this combination of line search and beta_update is not supported yet')
 

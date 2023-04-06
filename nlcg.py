@@ -32,7 +32,10 @@ def nlcg_secant(parameters):
     STEP_SIZE=np.double(0.01) #set as constant for now, could be user defined
 
     #Intialise array which would hold the computed solutions, saved at every iteration
-    solution_history = np.empty((max_iter,2), dtype=np.float64)
+    solution_history = [[x,y]]
+    #Intialise array which would hold the computed solutions, saved at every iteration
+    # solution_history = np.empty((max_iter,3), dtype=np.float64)
+    #history is indexed by row iter x y
 
     for k in range(0,max_iter):
 
@@ -81,10 +84,12 @@ def nlcg_secant(parameters):
             x += alpha*px_step
             y += alpha*py_step
 
-            #Save to history array
-            solution_history[k,0] = x
-            solution_history[k,1] = y
-
+            #Save to solution history
+            # solution_history[k,0] = k
+            # solution_history[k,1] = x
+            # solution_history[k,2] = y
+            solution_history.append([x,y])
+            
             #To be used for k>0 iterations
             sigma = -alpha
 
@@ -139,9 +144,11 @@ def nlcg_secant(parameters):
             x += alpha*px_step
             y += alpha*py_step
 
-            #Save to history array
-            solution_history[k,0] = x
-            solution_history[k,1] = y
+            #Save to solution history
+            # solution_history[k,0] = k
+            # solution_history[k,1] = x
+            # solution_history[k,2] = y
+            solution_history.append([x,y])
 
             #tolerance check both x and y must be sufficiently converged
             if(np.isclose(x_old, x, rtol=mytolerance)):
@@ -152,13 +159,13 @@ def nlcg_secant(parameters):
 
             if (xconv and yconv):
                 success = True
-                output_history = solution_history[0:k]
+                output_history = solution_history
                 break
 
     #After the for loop, if success is false we still need to write a history array
     if(xconv==False or yconv==False):
         success = False
-        output_history = solution_history[0:k]
+        output_history = solution_history
 
     return success, x, y, output_history, k
 
@@ -192,9 +199,11 @@ def nlcg_newton_raphson(parameters):
     STEP_SIZE=np.double(0.01) #set as constant for now, could be user defined
 
     #Intialise array which would hold the computed solutions, saved at every iteration
-    solution_history = np.empty((max_iter,2), dtype=np.float64)
+    solution_history = [[x,y]]
+    # solution_history = np.empty((max_iter,3), dtype=np.float64)
+    #history is indexed by row iter x y
 
-    #Intialise x_old and y_old here to something very high so that algorithm doesnt converge
+    #Intialise x_old and y_old here to something very high so that algorithm doesnt converge immediately
     x_old = np.float64(1e30)
     y_old = np.float64(1e30)
 
@@ -278,9 +287,11 @@ def nlcg_newton_raphson(parameters):
         x += alpha*px_step
         y += alpha*py_step
 
-        #Save to history array
-        solution_history[k,0] = x
-        solution_history[k,1] = y
+        #Save to solution history
+        # solution_history[k,0] = k
+        # solution_history[k,1] = x
+        # solution_history[k,2] = y
+        solution_history.append([x,y])
 
         #Compute derivatives
         fx_prime = differentiate_x(x,y,function,STEP_SIZE)
@@ -319,13 +330,13 @@ def nlcg_newton_raphson(parameters):
 
         if(xconv and yconv):
             success = True
-            output_history = solution_history[0:k]
+            output_history = solution_history
             break
 
     #After the for loop, if success is false we still need to write a history array
     if(xconv==False or yconv==False):
         success = False
-        output_history = solution_history[0:k]
+        output_history = solution_history
 
 
     return success, x, y, output_history, k
@@ -336,7 +347,7 @@ def nlcg_newton_raphson(parameters):
 def differentiate_x(x,y,myfunc,H):
     
     #initialise coeff array for O(H^6)
-    coeff = np.array([-45, -9, 1], dtype=np.float64)
+    coeff = np.array([45, -9, 1], dtype=np.float64)
 
     #intialise result to zero
     partial_x = np.double(0.0)
@@ -362,7 +373,7 @@ def differentiate_x(x,y,myfunc,H):
 def differentiate_y(x,y,myfunc,H):
     
     #initialise coeff array for O(H^6)
-    coeff = np.array([-45, -9, 1], dtype=np.float64)
+    coeff = np.array([45, -9, 1], dtype=np.float64)
 
     #intialise result to zero
     partial_y = np.double(0.0)

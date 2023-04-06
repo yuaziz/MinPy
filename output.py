@@ -5,6 +5,9 @@ def write_output(success, x, y, history_array, num_iters):
     Write an output file which contains all information
 
     """
+
+    format_array = np.array(history_array)
+
     with open('output.dat','w') as out:
         out.writelines(r"""
 
@@ -25,3 +28,10 @@ def write_output(success, x, y, history_array, num_iters):
         out.writelines(f'Global Minimum y : {y:.6f}\n')
         out.writelines(f'Completed in {num_iters} iterations\n')
         out.writelines('#-------------------------------------------#\n')
+        out.writelines('Writing solution history array\n')
+
+        # for row in history_array:
+        #     out.write(' '.join([str(a) for a in row]) + '\n')
+        np.savetxt('output.dat', format_array, delimiter='     ', fmt="%.6f")
+        # np.savetxt('output.dat', history_array, delimiter=';', newline='\r\n', fmt='%.3f')
+
