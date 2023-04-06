@@ -32,6 +32,6 @@ def write_output(success, x, y, history_array, num_iters):
 
         # for row in history_array:
         #     out.write(' '.join([str(a) for a in row]) + '\n')
-        np.savetxt('output.dat', format_array, delimiter='     ', fmt="%.6f")
+        np.savetxt(out, format_array, delimiter='     ', fmt="%.6f")
         # np.savetxt('output.dat', history_array, delimiter=';', newline='\r\n', fmt='%.3f')
 

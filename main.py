@@ -25,7 +25,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 import sys
 from param import init_params
 from nlcg import nlcg_secant, nlcg_newton_raphson
-#from bfgs import bfgs_solver
+from bfgs import bfgs_solver
 from output import write_output
 
 def main():
