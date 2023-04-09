@@ -210,7 +210,7 @@ def bfgs_solver(parameters):
         success = False
         output_history = solution_history
 
-    return success, x, y, output_history, k
+    return success, x, y, output_history, k+1
 
 
 #Compute the inverse of the supplied hessian, return the inverse

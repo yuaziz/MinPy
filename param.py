@@ -131,12 +131,12 @@ def check_params(parameters):
     if 'beta_update' in parameters:
         pass
     else:
-        parameters.update({'beta_update' : 'polak_ribiere'})
+        parameters.update({'beta_update' : 'fletcher_reeves'})
 
     if 'line_search' in parameters:
         pass
     else:
-        parameters.update({'line_search' : 'secant'})
+        parameters.update({'line_search' : 'newton_raphson'})
 
     if 'tolerance' in parameters:
         parameters.update({'tolerance' : np.double(parameters.get('tolerance'))})

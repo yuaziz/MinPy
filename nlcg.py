@@ -167,7 +167,7 @@ def nlcg_secant(parameters):
         success = False
         output_history = solution_history
 
-    return success, x, y, output_history, k
+    return success, x, y, output_history, k+1
 
 
 
@@ -339,7 +339,7 @@ def nlcg_newton_raphson(parameters):
         output_history = solution_history
 
 
-    return success, x, y, output_history, k
+    return success, x, y, output_history, k+1
 
 
 
