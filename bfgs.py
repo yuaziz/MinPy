@@ -31,15 +31,16 @@ def bfgs_solver(parameters):
     #Step size for numerical derivative evaluation
     STEP_SIZE=np.double(0.01) #set as constant for now, could be user defined
 
-    #Intialise array which would hold the computed solutions, saved at every iteration
+    #Dont know how big our solution_history will be so use a list
+    #Intialise list with starting x and y, save computed solutions at every iteration
     solution_history = [[x,y]]
-    # solution_history = np.empty((max_iter,3), dtype=np.float64)
-    #history is indexed by row iter x y
 
     #Unlike NLCG, here we will store x and y in arrays and do the majority of operations with arrays.
-    #x and y will be stored in a column vector of form
-    #vec = ({[x],
-    #        [y]})
+    #====================================================#
+    # x and y will be stored in a column vector of form  #
+    # vec = ({[x],                                       #
+    #         [y]})                                      #
+    #====================================================#
 
     for k in range(0,max_iter):
 
@@ -50,7 +51,8 @@ def bfgs_solver(parameters):
             sol_vec[0,0] = x
             sol_vec[1,0] = y
 
-            #Initialise the approximate hessian to the 2X2 identity
+            #Use Steepest Descent for the first iteration
+            #Initialise the approximate hessian to the 2X2 identity, this is an SD step
             hess = np.eye(2,2)
 
             #We require the inverse here, already know the solution for the identity but call function anyway
@@ -122,9 +124,6 @@ def bfgs_solver(parameters):
             grad_vec = np.copy(grad_vec_new)
 
             #Save to solution history
-            # solution_history[k,0] = k
-            # solution_history[k,1] = x
-            # solution_history[k,2] = y
             solution_history.append([x,y])
 
         else:
@@ -188,9 +187,6 @@ def bfgs_solver(parameters):
             grad_vec = np.copy(grad_vec_new)
 
             #Save to solution history
-            # solution_history[k,0] = k
-            # solution_history[k,1] = x
-            # solution_history[k,2] = y
             solution_history.append([x,y])
 
             #tolerance check both x and y must be sufficiently converged
@@ -242,7 +238,7 @@ def hessian_matrix_inverse(hessian):
     return hessian_inverse
 
 #Update the hessian matrix using the current hessian, diff solution and diff gradient vectors
-#return an np.double hessian_update
+#return an hessian_update array
 def hessian_matrix_update(grad_diff, sol_diff, hess):
 
     #initialise hess_update with zeros

@@ -31,18 +31,55 @@ def nlcg_secant(parameters):
     #Step size for numerical derivative evaluation
     STEP_SIZE=np.double(0.01) #set as constant for now, could be user defined
 
-    #Intialise array which would hold the computed solutions, saved at every iteration
+    # sd_count = 0 #Can use to check how many times a SD reset is needed
+
+    #Dont know how big our solution_history will be so use a list
+    #Intialise list with starting x and y, save computed solutions at every iteration
     solution_history = [[x,y]]
-    #Intialise array which would hold the computed solutions, saved at every iteration
-    # solution_history = np.empty((max_iter,3), dtype=np.float64)
-    #history is indexed by row iter x y
 
     for k in range(0,max_iter):
 
+
+        #The first iteration will correspond to a Steepest Descent step
         if (k==0):
-            #Inital search step is equal to intial x and y
-            px_step = x
-            py_step = y
+            #Compute derivatives
+            fx_prime = differentiate_x(x,y,function,STEP_SIZE)
+            fy_prime = differentiate_y(x,y,function,STEP_SIZE)
+
+            #Compute the residuals
+            res_x = -fx_prime
+            res_y = -fy_prime
+
+            #line search using SD step
+            #Require derivatives for secant line search
+            fpsec_x = differentiate_x(x+(SIGMA_INIT*res_x), y, function,STEP_SIZE)
+            fpsec_y = differentiate_y(x, y+(SIGMA_INIT*res_y), function,STEP_SIZE)
+
+            #Carry out line-search (compute alpha)
+            eta_prev = fpsec_x*res_x + fpsec_y*res_y
+
+            eta = fx_prime*res_x + fy_prime*res_y
+
+            #Initialise alpha and update
+            alpha = -SIGMA_INIT
+
+            alpha *= (eta/(eta_prev-eta))
+
+            #Update solutions using SD
+            x += alpha*res_x
+            y += alpha*res_y
+
+            #Save to solution history
+            solution_history.append([x,y])
+            
+            #To be used for k>0 iterations
+            sigma = -alpha
+
+        else:
+
+            #Save old_residuals
+            res_x_old = res_x
+            res_y_old = res_y
 
             #Compute derivatives
             fx_prime = differentiate_x(x,y,function,STEP_SIZE)
@@ -53,70 +90,15 @@ def nlcg_secant(parameters):
             res_y = -fy_prime
 
             #Compute beta (scalar for search direction)
-            beta_upper = res_x*(res_x - px_step) + res_y*(res_y-py_step)
-            beta_lower = np.power(res_x,2.0) + np.power(res_y,2.0)
+            beta_upper = res_x*(res_x - res_x_old) + res_y*(res_y - res_y_old)
+            beta_lower = np.power(res_x_old,2.0) + np.power(res_y_old,2.0)
             beta = beta_upper / beta_lower
 
             #Reset Search Direction if beta is negative for Polak-Ribiere
-            if np.less(beta, np.double(0.0)):
+            if np.less_equal(beta, np.double(0.0)):
                 px_step = res_x
                 py_step = res_y
-                # print('reset sd')
-            else:
-                px_step = res_x + beta*px_step
-                py_step = res_y + beta*py_step
-
-            #Require derivatives for secant line search
-            fpsec_x = differentiate_x(x+(SIGMA_INIT*px_step), y, function,STEP_SIZE)
-            fpsec_y = differentiate_y(x, y+(SIGMA_INIT*py_step), function,STEP_SIZE)
-
-            #Carry out line-search (compute alpha)
-            eta_prev = fpsec_x*px_step + fpsec_y*py_step
-
-            eta = fx_prime*px_step + fy_prime*py_step
-
-            #Initialise alpha and update
-            alpha = -SIGMA_INIT
-
-            alpha *= (eta/(eta_prev-eta))
-
-            #Update solutions
-            x += alpha*px_step
-            y += alpha*py_step
-
-            #Save to solution history
-            # solution_history[k,0] = k
-            # solution_history[k,1] = x
-            # solution_history[k,2] = y
-            solution_history.append([x,y])
-            
-            #To be used for k>0 iterations
-            sigma = -alpha
-
-        else:
-
-            #Set search direction to previous residual
-            px_step = res_x
-            py_step = res_y
-
-            #Compute derivatives
-            fx_prime = differentiate_x(x,y,function,STEP_SIZE)
-            fy_prime = differentiate_y(x,y,function,STEP_SIZE)
-
-            #Compute the residuals for SD
-            res_x = -fx_prime
-            res_y = -fy_prime
-
-            #Compute beta (scalar for search direction)
-            beta_upper = res_x*(res_x - px_step) + res_y*(res_y-py_step)
-            beta_lower = np.power(res_x,2.0) + np.power(res_y,2.0)
-            beta = beta_upper / beta_lower
-
-            #Reset Search Direction if beta is negative for Polak-Ribiere
-            if np.less(beta, np.double(0.0)):
-                px_step = res_x
-                py_step = res_y
-                # print('reset sd')
+                # sd_count +=1 #for interest
             else:
                 px_step = res_x + beta*px_step
                 py_step = res_y + beta*py_step
@@ -144,10 +126,6 @@ def nlcg_secant(parameters):
             x += alpha*px_step
             y += alpha*py_step
 
-            #Save to solution history
-            # solution_history[k,0] = k
-            # solution_history[k,1] = x
-            # solution_history[k,2] = y
             solution_history.append([x,y])
 
             #tolerance check both x and y must be sufficiently converged
@@ -158,6 +136,7 @@ def nlcg_secant(parameters):
                 yconv = True
 
             if (xconv and yconv):
+                # print('Number of SD resets: ', sd_count) #for interest
                 success = True
                 output_history = solution_history
                 break
@@ -198,10 +177,9 @@ def nlcg_newton_raphson(parameters):
     #Step size for numerical derivative evaluation
     STEP_SIZE=np.double(0.01) #set as constant for now, could be user defined
 
-    #Intialise array which would hold the computed solutions, saved at every iteration
+    #Dont know how big our solution_history will be so use a list
+    #Intialise list with starting x and y, save computed solutions at every iteration
     solution_history = [[x,y]]
-    # solution_history = np.empty((max_iter,3), dtype=np.float64)
-    #history is indexed by row iter x y
 
     #Intialise x_old and y_old here to something very high so that algorithm doesnt converge immediately
     x_old = np.float64(1e30)
@@ -209,15 +187,7 @@ def nlcg_newton_raphson(parameters):
 
     for k in range(0,max_iter):
         
-        #if(k==0):
-        #    #Inital search step is equal to intial x and y
-        #    px_step = x
-        #    py_step = y
-        #else:
-        #    #Update search direction with residual
-        #    px_step = res_x 
-        #    py_step = res_y
-
+        #First iteration is a SD step
         if(k==0):
             #Compute derivatives
             fx_prime = differentiate_x(x,y,function,STEP_SIZE)
@@ -236,12 +206,11 @@ def nlcg_newton_raphson(parameters):
         alpha_upper = -(fx_prime*px_step + fy_prime*py_step)
 
         #-------------------------------------------------------------------------#
-        # At this point we will switch to array manipulation to construct the     #
-        # hessian matrix for dxdx, dydy and dxdy=dydx components, this should     #
-        # aid greatly in the bookkeping of variables                              #
+        # Store hessian matrix as a 2X2 array which is symmetric (dxdy=dydx):     #
+        # hessian = ([dxdx, dxdy],                                                #
+        #            [dxdy, dydy])                                                #
         #                                                                         #
-        # However once we have computed alpha, will simply extract what we need   #
-        # and update x and y accordingly.                                         #
+        # After obtaining alpha, will switch back to updating x and y             #
         #-------------------------------------------------------------------------#
 
         #Initialise array
@@ -288,9 +257,6 @@ def nlcg_newton_raphson(parameters):
         y += alpha*py_step
 
         #Save to solution history
-        # solution_history[k,0] = k
-        # solution_history[k,1] = x
-        # solution_history[k,2] = y
         solution_history.append([x,y])
 
         #Compute derivatives
@@ -316,7 +282,7 @@ def nlcg_newton_raphson(parameters):
 
         #Reset if search direction is not in a descent direction
         reset_factor = res_x*px_step + res_y*py_step
-        if np.less(reset_factor,np.double(0.0)):
+        if np.less_equal(reset_factor,np.double(0.0)):
             px_step = res_x
             py_step = res_y
             # print('reset sd')
