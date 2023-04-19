@@ -50,10 +50,12 @@ def nlcg_secant(parameters):
             res_x = -fx_prime
             res_y = -fy_prime
 
-            #line search using SD step
+            #line search using SD step direction,
+            px_step = res_x
+            py_step = res_y
             #Require derivatives for secant line search
-            fpsec_x = differentiate_x(x+(SIGMA_INIT*res_x), y, function,STEP_SIZE)
-            fpsec_y = differentiate_y(x, y+(SIGMA_INIT*res_y), function,STEP_SIZE)
+            fpsec_x = differentiate_x(x+(SIGMA_INIT*px_step), y, function,STEP_SIZE)
+            fpsec_y = differentiate_y(x, y+(SIGMA_INIT*py_step), function,STEP_SIZE)
 
             #Carry out line-search (compute alpha)
             eta_prev = fpsec_x*res_x + fpsec_y*res_y
