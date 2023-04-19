@@ -2,6 +2,7 @@
 
 import numpy as np
 from optimisation_functions import OptFunc
+from beta_update import BetaUpd
 
 def nlcg_secant(parameters):
     """Perform nonlinear conjugate gradient with Secant, polak-ribiere utilised exclusively (for now) for the beta update
@@ -83,6 +84,10 @@ def nlcg_secant(parameters):
             res_x_old = res_x
             res_y_old = res_y
 
+            #Save old search directions
+            px_step_old = px_step
+            py_step_old = py_step
+
             #Compute derivatives
             fx_prime = differentiate_x(x,y,function,STEP_SIZE)
             fy_prime = differentiate_y(x,y,function,STEP_SIZE)
@@ -92,9 +97,11 @@ def nlcg_secant(parameters):
             res_y = -fy_prime
 
             #Compute beta (scalar for search direction)
-            beta_upper = res_x*(res_x - res_x_old) + res_y*(res_y - res_y_old)
-            beta_lower = np.power(res_x_old,2.0) + np.power(res_y_old,2.0)
-            beta = beta_upper / beta_lower
+            # beta_upper = res_x*(res_x - res_x_old) + res_y*(res_y - res_y_old)
+            # beta_lower = np.power(res_x_old,2.0) + np.power(res_y_old,2.0)
+            # beta = beta_upper / beta_lower
+            beta_init = BetaUpd(res_x, res_y, res_x_old, res_y_old, px_step_old, py_step_old)
+            beta = beta_init.calc_beta_update('polak_ribiere')
 
             #Reset Search Direction if beta is negative for Polak-Ribiere
             if np.less_equal(beta, np.double(0.0)):
@@ -269,14 +276,22 @@ def nlcg_newton_raphson(parameters):
         res_x_old = res_x
         res_y_old = res_y
 
+        #Save old step directions
+        px_step_old = px_step
+        py_step_old = py_step
+
         #Set the new residuals
         res_x = -fx_prime
         res_y = -fy_prime
         
         #Compute beta (scalar for search direction), fletcher_reeves
-        beta_upper = np.power(res_x,2.0) + np.power(res_y,2.0)
-        beta_lower = np.power(res_x_old,2.0) + np.power(res_y_old,2.0)
-        beta = beta_upper / beta_lower
+        # beta_upper = np.power(res_x,2.0) + np.power(res_y,2.0)
+        # beta_lower = np.power(res_x_old,2.0) + np.power(res_y_old,2.0)
+        # beta = beta_upper / beta_lower
+
+        #NEW WAY
+        beta_init = BetaUpd(res_x, res_y, res_x_old, res_y_old, px_step_old, py_step_old)
+        beta = beta_init.calc_beta_update('fletcher_reeves')
 
         #Update search direction
         px_step = res_x + beta*px_step
