@@ -24,11 +24,13 @@ Please note there is **no** relation between the name of this repository and tha
 - output.py
 - main.py
 - optimisation_functions.py
+- beta_update.py
+- differentiate.py
 ```
 
 ## Usage
 
-After setting up an appropriate parameter file, 'compute.param', run the 'main.py' script and supply a single parameter file as an argument::
+After setting up an appropriate parameter file, 'compute.param', run the 'main.py' script and supply a single parameter file as an argument:
 
 ```bash
 python main.py compute.param
@@ -36,9 +38,9 @@ python main.py compute.param
 
 ## Parameter File
 
-The script expects a parameter file which provides the means for you to set the variables for the computation. These include the type of solver you wish to use and the optimisation function you wish to apply the iterative method in an attempt to find the global minimum.
+The script expects a parameter file which provides the means for you to set the variables for the computation. These include the type of solver you want to use, the optimisation function and intial starting points upon which the iterative method will use in attempts to find a global minimum.
 
-Here all parameters accessible to you are listed, some are required for the computation to run. Others, if not specified, have a default setting.
+Here, all parameters accessible to you are listed, some are required for the computation to run. Others, if not specified, have a default setting.
 
 * * *
 
@@ -57,7 +59,7 @@ Allowed values:
 
 *REQUIRED*
 
-More details of these functions may be found on the [Wiki](https://en.wikipedia.org/wiki/Test_functions_for_optimization)
+More details of these functions may be found on the [Wiki: Test Functions](https://en.wikipedia.org/wiki/Test_functions_for_optimization)
 
 Allowed values:
 
@@ -107,8 +109,12 @@ Allowed Values:
 
 - Fletcher\_Reeves
 - Polak\_Ribiere
+- Hestenes\_Stiefel
+- Dai\_Yuan
 
 Default : 'fletcher\_reeves'
+
+**Note this parameter has no influence on the computation if the BFGS solver is specified, since the search direction in this case is updated through the approximate hessian.**
 
 * * *
 
@@ -125,7 +131,7 @@ Allowed Values:
 
 Default : 'newton\_raphson'
 
-**Note that for now, the 'Secant' method exclusively uses the 'polak\_ribiere' to update $\beta$. Also 'Newton\_Raphson' only uses 'fletcher\_reeves'.**
+**Note that the 'Secant' method is used exclusively for the inexact line search in the BFGS solver.**
 
 * * *
 
@@ -151,7 +157,7 @@ Default : 1.0e-9
 
 ## Example Calculation
 
-In this example, the global minimum of the Rosenbrock (banana) is determined from initial starting points of $x=4.0$ and $y=4.0$. The Nonlinear Conjugate Gradient solver is used, employing a Newton-Raphson line search along with a Fletcher-Reeves formula for the $\beta$ update. The parameter file 'compute.param' for this is written:
+In this example, the global minimum of the Rosenbrock (banana) is determined from initial starting points of $x=4.0$ and $y=4.0$. The Nonlinear Conjugate Gradient solver is used, employing a Newton-Raphson line search along with a Fletcher-Reeves formula for the $\beta$ update. The parameter file 'compute.param' for this is written as:
 
 ```text
 Function    = Rosenbrock
@@ -225,8 +231,8 @@ Writing solution history array
 
 ## Status and Further Work
 
-\- Will aim to include more formulations for line searches and methods for the $\beta$ update, more flexibility for the user to pick and choose.
-\- Implement plotting capability so the user can intuitively visualise algorithm behaviour as it attempts to reach global minima.
+- Will aim to include more formulations for line searches and methods for the $\alpha$ and $\beta$ updates, more flexibility for the user to pick and choose.
+- Implement plotting capability so the user can intuitively visualise algorithm behaviour as algorithm attempts to reach global minima.
 
 ## Dependencies
 
