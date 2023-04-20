@@ -22,6 +22,7 @@ def nlcg_secant(parameters):
     y              -- global minimum of the y component
     output_history -- a numpy array containing the history of all components saved at every iteration
     k              -- Number of iterations required for converged solution, otherwise equal to max_iter-1 if not converged
+    sd_reset       -- Number of Steepest Descent resets triggered by the algorithm
     """
     #Begin by setting the variables from a checked parameter dict
     x = parameters.get('x_initial')
@@ -39,7 +40,7 @@ def nlcg_secant(parameters):
     #Step size for numerical derivative evaluation
     STEP_SIZE=np.double(0.01) #set as constant for now, could be user defined
 
-    # sd_count = 0 #Can use to check how many times a SD reset is needed
+    sd_reset = 0 #Counter for the number of times the algorithm is reset to an SD step
 
     #Dont know how big our solution_history will be so use a list
     #Intialise list with starting x and y, save computed solutions at every iteration
@@ -111,7 +112,8 @@ def nlcg_secant(parameters):
             if np.less_equal(beta, np.double(0.0)):
                 px_step = res_x
                 py_step = res_y
-                # sd_count +=1 #for interest
+                #Add to sd reset counter
+                sd_reset += 1
             else:
                 px_step = res_x + beta*px_step
                 py_step = res_y + beta*py_step
@@ -149,7 +151,6 @@ def nlcg_secant(parameters):
                 yconv = True
 
             if (xconv and yconv):
-                # print('Number of SD resets: ', sd_count) #for interest
                 success = True
                 output_history = solution_history
                 break
@@ -159,7 +160,7 @@ def nlcg_secant(parameters):
         success = False
         output_history = solution_history
 
-    return success, x, y, output_history, k+1
+    return success, x, y, output_history, k+1, sd_reset
 
 
 
@@ -175,6 +176,7 @@ def nlcg_newton_raphson(parameters):
     y              -- global minimum of the y component
     output_history -- a numpy array containing the history of all components saved at every iteration
     k              -- Number of iterations required for converged solution, otherwise equal to max_iter if not converged
+    sd_reset       -- Number of Steepest Descent resets triggered by the algorithm
     """
     #Begin by setting the variables from a checked parameter dict
     x = parameters.get('x_initial')
@@ -190,6 +192,8 @@ def nlcg_newton_raphson(parameters):
 
     #Step size for numerical derivative evaluation
     STEP_SIZE=np.double(0.01) #set as constant for now, could be user defined
+
+    sd_reset = 0 #Counter for the number of times the algorithm is reset to an SD step
 
     #Dont know how big our solution_history will be so use a list
     #Intialise list with starting x and y, save computed solutions at every iteration
@@ -302,7 +306,8 @@ def nlcg_newton_raphson(parameters):
         if np.less_equal(reset_factor,np.double(0.0)):
             px_step = res_x
             py_step = res_y
-            # print('reset sd')
+            #Add to sd reset counter
+            sd_reset += 1
 
         #tolerance check both x and y must be sufficiently converged
         if(np.isclose(x_old, x, rtol=mytolerance)):
@@ -322,5 +327,5 @@ def nlcg_newton_raphson(parameters):
         output_history = solution_history
 
 
-    return success, x, y, output_history, k+1
+    return success, x, y, output_history, k+1, sd_reset
 

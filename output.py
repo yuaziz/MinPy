@@ -1,6 +1,6 @@
 import numpy as np
 
-def write_output(success, x, y, history_array, num_iters):
+def write_output(success, x, y, history_array, num_iters, sd_resets=None):
     """
     Write an output file which contains all information
 
@@ -27,6 +27,8 @@ def write_output(success, x, y, history_array, num_iters):
         out.writelines(f'Global Minimum x : {x:.9f}\n')
         out.writelines(f'Global Minimum y : {y:.9f}\n')
         out.writelines(f'Completed in {num_iters} iterations\n')
+        if sd_resets is not None:
+            out.writelines(f'Steepest Descent Resets: {sd_resets}\n')
         if not success:
             out.writelines('\n')
             out.writelines('**--------------------------------------------------**\n')

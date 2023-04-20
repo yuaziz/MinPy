@@ -45,16 +45,17 @@ def main():
     solver      = parameters.get('solver')
 
     if(solver=='nlcg' and line_search=='secant'):
-        success, x, y, history_array, num_iter = nlcg_secant(parameters)
+        success, x, y, history_array, num_iter, sd_count = nlcg_secant(parameters)
     elif(solver=='nlcg' and line_search=='newton_raphson'):
-        success, x, y, history_array, num_iter = nlcg_newton_raphson(parameters)
+        success, x, y, history_array, num_iter, sd_count = nlcg_newton_raphson(parameters)
     elif(solver=='bfgs'):
         success, x, y, history_array, num_iter = bfgs_solver(parameters)
+        sd_count = None #sd reset not employed for bfgs
     else:
         sys.exit('Apologies, this combination of line search and beta_update is not supported yet')
 
     #Write output
-    write_output(success, x, y, history_array, num_iter)
+    write_output(success, x, y, history_array, num_iter, sd_count)
 
     #Plot if required
 
