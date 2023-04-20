@@ -24,6 +24,7 @@ def nlcg_secant(parameters):
     function = parameters.get('function')
     max_iter = parameters.get('max_iter')
     mytolerance = parameters.get('tolerance')
+    beta_update = parameters.get('beta_update')
     xconv = False
     yconv = False
     success = False
@@ -97,11 +98,8 @@ def nlcg_secant(parameters):
             res_y = -fy_prime
 
             #Compute beta (scalar for search direction)
-            # beta_upper = res_x*(res_x - res_x_old) + res_y*(res_y - res_y_old)
-            # beta_lower = np.power(res_x_old,2.0) + np.power(res_y_old,2.0)
-            # beta = beta_upper / beta_lower
             beta_init = BetaUpd(res_x, res_y, res_x_old, res_y_old, px_step_old, py_step_old)
-            beta = beta_init.calc_beta_update('polak_ribiere')
+            beta = beta_init.calc_beta_update(beta_update)
 
             #Reset Search Direction if beta is negative for Polak-Ribiere
             if np.less_equal(beta, np.double(0.0)):
@@ -179,6 +177,7 @@ def nlcg_newton_raphson(parameters):
     function = parameters.get('function')
     max_iter = parameters.get('max_iter')
     mytolerance = parameters.get('tolerance')
+    beta_update = parameters.get('beta_update')
     xconv = False
     yconv = False
     success = False
@@ -284,14 +283,9 @@ def nlcg_newton_raphson(parameters):
         res_x = -fx_prime
         res_y = -fy_prime
         
-        #Compute beta (scalar for search direction), fletcher_reeves
-        # beta_upper = np.power(res_x,2.0) + np.power(res_y,2.0)
-        # beta_lower = np.power(res_x_old,2.0) + np.power(res_y_old,2.0)
-        # beta = beta_upper / beta_lower
-
-        #NEW WAY
+        #Compute beta (scalar for search direction)
         beta_init = BetaUpd(res_x, res_y, res_x_old, res_y_old, px_step_old, py_step_old)
-        beta = beta_init.calc_beta_update('fletcher_reeves')
+        beta = beta_init.calc_beta_update(beta_update)
 
         #Update search direction
         px_step = res_x + beta*px_step

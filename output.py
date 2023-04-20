@@ -33,7 +33,7 @@ def write_output(success, x, y, history_array, num_iters):
             out.writelines('WARNING solution(s) for x and/or y has not met\n')
             out.writelines('the convergence criteria for supplied tolerance.\n')
             out.writelines('Consider increasing max_iter, increasing tolerance,\n')
-            out.writelines('or using a different solver/method.\n')
+            out.writelines('using a different solver / line search / beta update.\n')
             out.writelines('**--------------------------------------------------**\n\n')
         out.writelines('#-----------------------------------------------------#\n')
         out.writelines('Writing solution history array\n')

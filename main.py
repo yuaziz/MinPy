@@ -40,14 +40,13 @@ def main():
     #Read in parameters and intialise
     parameters = init_params(file_name)
 
-    #Call nlcg solver based on parameter input, only support certain combinations...
-    beta_update = parameters.get('beta_update')
+    #Call solver based on parameter input
     line_search = parameters.get('line_search')
     solver      = parameters.get('solver')
 
-    if(solver=='nlcg' and line_search=='secant' and beta_update=='polak_ribiere' ):
+    if(solver=='nlcg' and line_search=='secant'):
         success, x, y, history_array, num_iter = nlcg_secant(parameters)
-    elif(solver=='nlcg' and line_search=='newton_raphson' and beta_update=='fletcher_reeves'):
+    elif(solver=='nlcg' and line_search=='newton_raphson'):
         success, x, y, history_array, num_iter = nlcg_newton_raphson(parameters)
     elif(solver=='bfgs'):
         success, x, y, history_array, num_iter = bfgs_solver(parameters)

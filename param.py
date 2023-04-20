@@ -13,8 +13,8 @@ def init_params(filename):
     function    : the function in question the user must specify in parameter file REQUIRED
     x_initial   : starting point for x REQUIRED
     y_initial   : starting point for y REQUIRED
-    beta_update : choice of either polak_ribiere or fletcher_reeves OPTIONAL (Default : polar_ribiere)
-    line_search : choice of either secant or newton_raphson OPTIONAL (Default : secant)
+    beta_update : choice of four formulas for beta OPTIONAL (Default : fletcher_reeves)
+    line_search : choice of either secant or newton_raphson OPTIONAL (Default : newton_raphson)
     max_iter    : maximum number of iterations for the solver to find global minimum OPTIONAL (Default : 10000 )
     tolerance   : tolerance factor to which x and y are determined OPTIONAL (Default : 1.0e-9)
     """
@@ -56,9 +56,36 @@ def check_params(parameters):
 
     #Call an error if user does not specify a solver
     if 'solver' in parameters:
-        pass
+        my_solver = parameters.get('solver')
     else:
         sys.exit('You must specify a solver in parameter file')
+
+    allowed_solvers = ['nlcg', 'bfgs']
+
+    if my_solver not in allowed_solvers:
+        sys.exit('Solver is not supported or check spelling of solver parameter')
+
+    #Check if user has specified a beta_update and that it is valid, otherwise set a default
+    if 'beta_update' in parameters:
+        my_beta_update = parameters.get('beta_update')
+    else:
+        parameters.update({'beta_update' : 'fletcher_reeves'})
+
+    allowed_beta_updates = ['fletcher_reeves', 'polak_ribiere', 'hestenes_stiefel', 'dai_yuan']
+
+    if my_beta_update not in allowed_beta_updates:
+        sys.exit('Beta_update is not supported or check spelling of beta_update parameter ')
+
+    #Check if user has specified a valid line search method, otherwise set a default
+    if 'line_search' in parameters:
+        my_line_search = parameters.get('line_search')
+    else:
+        parameters.update({'line_search' : 'newton_raphson'})
+
+    allowed_line_searches = ['secant', 'newton_raphson']
+
+    if my_line_search not in allowed_line_searches:
+        sys.exit('Line_search is not supported or check spelling of line_search parameter')
 
     #Check if user has specified x_int and y_int
     if 'x_initial' in parameters:
@@ -121,22 +148,11 @@ def check_params(parameters):
         else:
             sys.exit('x_initial and/or y_initial do not lie in range[-100,100] for Easom function search')
 
-    
     #Set some default values if this has not been specified by user, these are all optional parameters
     if 'max_iter' in parameters:
          parameters.update({'max_iter' : np.int(parameters.get('max_iter'))})
     else:
         parameters.update({'max_iter' : np.int(10000)})
-
-    if 'beta_update' in parameters:
-        pass
-    else:
-        parameters.update({'beta_update' : 'fletcher_reeves'})
-
-    if 'line_search' in parameters:
-        pass
-    else:
-        parameters.update({'line_search' : 'newton_raphson'})
 
     if 'tolerance' in parameters:
         parameters.update({'tolerance' : np.double(parameters.get('tolerance'))})
@@ -145,6 +161,7 @@ def check_params(parameters):
 
 
     return parameters
+
 
 
 

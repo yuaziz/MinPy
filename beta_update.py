@@ -1,4 +1,4 @@
-#this module will house all functions we caould use to update the beta parameter
+#This module will house all functions we could use to update the beta parameter
 
 #Similarly to the optmisation functions module, we create a class and dynamically call dependent on
 # a string which is user defined and has been checked by the parameters module.
@@ -17,56 +17,36 @@ class BetaUpd:
 
 
     def beta_update_fletcher_reeves(self):
-        res_x = self.res_x
-        res_y = self.res_y
-        res_x_old = self.res_x_old
-        res_y_old = self.res_y_old
 
-        beta_upper = np.power(res_x,2.0) + np.power(res_y,2.0)
-        beta_lower = np.power(res_x_old,2.0) + np.power(res_y_old,2.0)
+        beta_upper = np.power(self.res_x,2.0) + np.power(self.res_y,2.0)
+        beta_lower = np.power(self.res_x_old,2.0) + np.power(self.res_y_old,2.0)
         beta = beta_upper / beta_lower
 
         return beta
 
 
     def beta_update_polak_ribiere(self):
-        res_x = self.res_x
-        res_y = self.res_y
-        res_x_old = self.res_x_old
-        res_y_old = self.res_y_old
 
-        beta_upper = res_x*(res_x - res_x_old) + res_y*(res_y - res_y_old)
-        beta_lower = np.power(res_x_old,2.0) + np.power(res_y_old,2.0)
+        beta_upper = self.res_x*(self.res_x - self.res_x_old) + self.res_y*(self.res_y - self.res_y_old)
+        beta_lower = np.power(self.res_x_old,2.0) + np.power(self.res_y_old,2.0)
         beta = beta_upper / beta_lower
 
         return beta
 
 
     def beta_update_hestenes_stiefel(self):
-        res_x = self.res_x
-        res_y = self.res_y
-        res_x_old = self.res_x_old
-        res_y_old = self.res_y_old
-        px_step_old = self.px_step_old
-        py_step_old = self.py_step_old
 
-        beta_upper = res_x*(res_x - res_x_old) + res_y*(res_y - res_y_old)
-        beta_lower = -px_step_old*(res_x - res_x_old) - py_step_old*(res_y - res_y_old)
+        beta_upper = self.res_x*(self.res_x - self.res_x_old) + self.res_y*(self.res_y - self.res_y_old)
+        beta_lower = -self.px_step_old*(self.res_x - self.res_x_old) - self.py_step_old*(self.res_y - self.res_y_old)
         beta = beta_upper / beta_lower
 
         return beta
 
 
     def beta_update_dai_yuan(self):
-        res_x = self.res_x
-        res_y = self.res_y
-        res_x_old = self.res_x_old
-        res_y_old = self.res_y_old
-        px_step_old = self.px_step_old
-        py_step_old = self.py_step_old
 
-        beta_upper = np.power(res_x,2.0) + np.power(res_y,2.0)
-        beta_lower = -px_step_old*(res_x - res_x_old) - py_step_old*(res_y - res_y_old)
+        beta_upper = np.power(self.res_x,2.0) + np.power(self.res_y,2.0)
+        beta_lower = -self.px_step_old*(self.res_x - self.res_x_old) - self.py_step_old*(self.res_y - self.res_y_old)
         beta = beta_upper / beta_lower
 
         return beta
