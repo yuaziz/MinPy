@@ -1,5 +1,6 @@
 import numpy as np
-from optimisation_functions import OptFunc
+
+from differentiate import differentiate_x, differentiate_y
 
 def bfgs_solver(parameters):
     """Perform BFGS (Quasi-Newton Update), polak-ribiere utilised exclusively (for now) for the beta update
@@ -273,65 +274,4 @@ def hessian_matrix_update(grad_diff, sol_diff, hess):
     hess_update = np.subtract(term1, term2)
 
     return hess_update
-
-
-#Uses O(H^6) accurate central difference to approximate the derivative wrt x
-def differentiate_x(x,y,myfunc,H):
-
-    #initialise coeff array for O(H^6)
-    coeff = np.array([45, -9, 1], dtype=np.float64)
-
-    #intialise result to zero
-    partial_x = np.double(0.0)
-
-    for i in range(0,3):
-        #Need func for both +- h
-        func_plus = OptFunc(x+(i+1.0)*H, y)
-        func_minus = OptFunc(x-(i+1.0)*H, y)
-        #Evaluate function at the point
-        f_plus = func_plus.solve_for(myfunc)
-        f_minus = func_minus.solve_for(myfunc)
-        #Add to partial_x
-        partial_x += coeff[i]*(f_plus - f_minus)
-
-    #Divide by 60 (from central difference formula) and H
-    partial_x /= (60.0*H)
-
-    return partial_x
-
-
-
-#Uses O(H^6) accurate central difference to approximate the derivative wrt y
-def differentiate_y(x,y,myfunc,H):
-
-    #initialise coeff array for O(H^6)
-    coeff = np.array([45, -9, 1], dtype=np.float64)
-
-    #intialise result to zero
-    partial_y = np.double(0.0)
-
-    for i in range(0,3):
-        #Need func for both +- h
-        func_plus = OptFunc(x, y+(i+1.0)*H)
-        func_minus = OptFunc(x, y-(i+1.0)*H)
-        #Evaluate function at the point
-        f_plus = func_plus.solve_for(myfunc)
-        f_minus = func_minus.solve_for(myfunc)
-        #Add to partial_y
-        partial_y += coeff[i]*(f_plus - f_minus)
-
-    #Divide by 60 (from central difference formula) and H
-    partial_y /= (60.0*H)
-
-    return partial_y
-
-
-
-
-
-
-
-
-
-
 
