@@ -49,7 +49,8 @@ def check_params(parameters):
     else:
         sys.exit('Function not specified in parameter file')
 
-    allowed_funcs = ['rosenbrock', 'rastrigin', 'ackley', 'beale', 'booth', 'matyas', 'himmelblau', 'easom']
+    allowed_funcs = ['rosenbrock', 'rastrigin', 'ackley', 'beale', 'booth', 'matyas',\
+            'himmelblau', 'easom', 'three_hump_camel']
 
     if myfunc not in allowed_funcs:
         sys.exit('Function is not supported or check spelling of function parameter')
@@ -147,6 +148,12 @@ def check_params(parameters):
             pass
         else:
             sys.exit('x_initial and/or y_initial do not lie in range[-100,100] for Easom function search')
+
+    if myfunc == 'three_hump_camel':
+        if(check_in_range(np.double(-5.0),np.double(5.0),myx_init,myy_init)):
+            pass
+        else:
+            sys.exit('x_inital and/or y_initial do not lie in range[-5,5] for Three Hump Camel function search')
 
     #Set some default values if this has not been specified by user, these are all optional parameters
     if 'max_iter' in parameters:

@@ -71,6 +71,7 @@ Allowed values:
 - Matyas
 - Himmelblau
 - Easom
+- Three\_Hump\_Camel
 
 * * *
 
@@ -96,6 +97,7 @@ Both 'x\_initial' and 'y\_initial' must be within the allowed search domain for 
 - Matyas $\longrightarrow$ $[x, y]\in[-10, 10]$
 - Himmelblau $\longrightarrow$ $[x, y]\in[-5, 5]$
 - Easom $\longrightarrow$ $[x, y]\in[-100, 100]$
+- Three\_Hump\_Camel $\longrightarrow$ $[x, y]\in[-5, 5]$
 
 * * *
 
@@ -196,6 +198,7 @@ Converged Solution Found: True
 Global Minimum x : 0.999999808
 Global Minimum y : 0.999999615
 Completed in 28 iterations
+Steepest Descent Resets: 1
 #-----------------------------------------------------#
 Writing solution history array
 4.000000000     4.000000000

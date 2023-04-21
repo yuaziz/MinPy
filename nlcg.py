@@ -11,7 +11,7 @@ from differentiate import (
         )
 
 def nlcg_secant(parameters):
-    """Perform nonlinear conjugate gradient with Secant, polak-ribiere utilised exclusively (for now) for the beta update
+    """Perform nonlinear conjugate gradient with a Secant line search.
 
     Keyword Arguments:
     parameters -- a dicitonary which is checked by init_params before used here.
@@ -165,7 +165,7 @@ def nlcg_secant(parameters):
 
 
 def nlcg_newton_raphson(parameters):
-    """Perform nonlinear conjugate gradient with Newton-Raphson, Fletcher-Reeves utilised exclusively (for now) for the beta update
+    """Perform nonlinear conjugate gradient with a line search based on the Newton-Raphson method.
 
     Keyword Arguments:
     parameters -- a dicitonary which is checked by init_params before used here.

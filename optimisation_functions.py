@@ -75,6 +75,13 @@ class OptFunc:
         funcval = -np.cos(x)*np.cos(y)*np.exp(-(np.power(x-np.pi,2.0)+np.power(y-np.pi,2.0)))
         return funcval
 
+    def calc_three_hump_camel(self):
+        x = self.x
+        y = self.y
+        funcval = (2*np.power(x,2.0)) - (np.double(1.05)*np.power(x,4.0))\
+                + (np.power(x,6.0)/6) + (x*y) + np.power(y,2.0)
+        return funcval
+
 
     #This is what we will call to get the output from all other functions
     def solve_for(self, name: str):
