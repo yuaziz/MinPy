@@ -90,81 +90,81 @@ def check_params(parameters):
 
     #Check if user has specified x_int and y_int
     if 'x_initial' in parameters:
-        myx_init = np.double(parameters.get('x_initial'))
+        myx_init = np.float64(parameters.get('x_initial'))
         parameters.update({'x_initial' : myx_init })
     else:
         sys.exit('x_initial not specified in parameter file')
     if 'y_initial' in parameters:
-        myy_init = np.double(parameters.get('y_initial'))
+        myy_init = np.float64(parameters.get('y_initial'))
         parameters.update({'y_initial' : myy_init })
     else:
         sys.exit('y_initial not specified in parameter file')
 
     #Now do a check on x_int and y_int to see if it is within the search space of the function in question
     if myfunc == 'rosenbrock':
-        if(check_in_range(np.double(-100.0),np.double(100.0),myx_init,myy_init)):
+        if(check_in_range(np.float64(-100.0),np.float64(100.0),myx_init,myy_init)):
             pass
         else:
             sys.exit('x_inital and/or y_initial do not lie in range[-100,100] for Rosenbrock function search')
 
     if myfunc == 'rastrigin':
-        if(check_in_range(np.double(-5.12),np.double(5.12),myx_init,myy_init)):
+        if(check_in_range(np.float64(-5.12),np.float64(5.12),myx_init,myy_init)):
             pass
         else:
             sys.exit('x_initial and/or y_initial do not lie in range[-5.12,5.12] for Rastrigin function search')
 
     if myfunc == 'ackley':
-        if(check_in_range(np.double(-5.0),np.double(5.0),myx_init,myy_init)):
+        if(check_in_range(np.float64(-5.0),np.float64(5.0),myx_init,myy_init)):
             pass
         else:
             sys.exit('x_initial and/or y_initial do not lie in range[-5,5] for Ackley function search')
 
     if myfunc == 'beale':
-        if(check_in_range(np.double(-4.5),np.double(4.5),myx_init,myy_init)):
+        if(check_in_range(np.float64(-4.5),np.float64(4.5),myx_init,myy_init)):
             pass
         else:
             sys.exit('x_initial and/or y_initial do not lie in range[-4.5,4.5] for Beale function search')
 
     if myfunc == 'booth':
-        if(check_in_range(np.double(-10.0),np.double(10.0),myx_init,myy_init)):
+        if(check_in_range(np.float64(-10.0),np.float64(10.0),myx_init,myy_init)):
             pass
         else:
             sys.exit('x_initial and/or y_initial do not lie in range[-10,10] for Booth function search')
 
     if myfunc == 'matyas':
-        if(check_in_range(np.double(-10.0),np.double(10.0),myx_init,myy_init)):
+        if(check_in_range(np.float64(-10.0),np.float64(10.0),myx_init,myy_init)):
             pass
         else:
             sys.exit('x_initial and/or y_initial do not lie in range[-10,10] for Matyas function search')
 
     if myfunc == 'himmelblau':
-        if(check_in_range(np.double(-5.0),np.double(5.0),myx_init,myy_init)):
+        if(check_in_range(np.float64(-5.0),np.float64(5.0),myx_init,myy_init)):
             pass
         else:
             sys.exit('x_initial and/or y_initial do not lie in range[-5,5] for Himmelblau function search')
 
     if myfunc == 'easom':
-        if(check_in_range(np.double(-100.0),np.double(100.0),myx_init,myy_init)):
+        if(check_in_range(np.float64(-100.0),np.float64(100.0),myx_init,myy_init)):
             pass
         else:
             sys.exit('x_initial and/or y_initial do not lie in range[-100,100] for Easom function search')
 
     if myfunc == 'three_hump_camel':
-        if(check_in_range(np.double(-5.0),np.double(5.0),myx_init,myy_init)):
+        if(check_in_range(np.float64(-5.0),np.float64(5.0),myx_init,myy_init)):
             pass
         else:
             sys.exit('x_inital and/or y_initial do not lie in range[-5,5] for Three Hump Camel function search')
 
     #Set some default values if this has not been specified by user, these are all optional parameters
     if 'max_iter' in parameters:
-         parameters.update({'max_iter' : np.int(parameters.get('max_iter'))})
+         parameters.update({'max_iter' : np.int32(parameters.get('max_iter'))})
     else:
-        parameters.update({'max_iter' : np.int(10000)})
+        parameters.update({'max_iter' : np.int32(10000)})
 
     if 'tolerance' in parameters:
-        parameters.update({'tolerance' : np.double(parameters.get('tolerance'))})
+        parameters.update({'tolerance' : np.float64(parameters.get('tolerance'))})
     else:
-        parameters.update({'tolerance' : np.double(1.0e-9)})
+        parameters.update({'tolerance' : np.float64(1.0e-9)})
 
 
     return parameters
