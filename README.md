@@ -22,7 +22,7 @@ Please note there is **no** relation between the name of this repository and tha
 - nlcg.py
 - bfgs.py
 - output.py
-- main.py
+- minpy.py
 - optimisation_functions.py
 - beta_update.py
 - differentiate.py
@@ -30,10 +30,10 @@ Please note there is **no** relation between the name of this repository and tha
 
 ## Usage
 
-After setting up an appropriate parameter file, 'compute.param', run the 'main.py' script and supply a single parameter file as an argument:
+After setting up an appropriate parameter file, 'compute.param', run the 'minpy.py' script and supply a single parameter file as an argument:
 
 ```bash
-python main.py compute.param
+python minpy.py compute.param
 ```
 
 ## Parameter File
@@ -175,10 +175,10 @@ tolerance   = 1.0e-9
 Run this as follows:
 
 ```bash
-python main.py compute.param
+python minpy.py compute.param
 ```
 
-You can have 'compute.param' in any directory so long as you correctly define the path to 'main.py' and it is able to access all the other modules supplied in this repository.
+You can have 'compute.param' in any directory so long as you correctly define the path to 'minpy.py' and it is able to access all the other modules supplied in this repository.
 
 Upon completion, a file 'output.dat' will contain the following:
 
