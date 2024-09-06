@@ -28,7 +28,7 @@ from nlcg import nlcg_secant, nlcg_newton_raphson
 from bfgs import bfgs_solver
 from output import write_output
 
-def main():
+def minpy():
 
     #Abort if user specifies multiple/no parameter files
     #Not a robust check as the user could specify other runtime options which can fool this
@@ -61,5 +61,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    minpy()
 
